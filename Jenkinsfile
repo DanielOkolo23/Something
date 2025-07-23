@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Store your OpenAI API key in Jenkins as a secret text credential named 'openai-api-key'
-        OPENAI_API_KEY = credentials('openai-api-key')
+        // 🔐 Make sure these are securely stored in Jenkins Credentials
+        OPENAI_API_KEY = credentials('openai-api-key')        // Your OpenAI token
+        SUDO_PASSWORD  = credentials('sudo-password')         // Your system user sudo password
     }
 
     stages {
@@ -13,23 +14,23 @@ pipeline {
             }
         }
 
-        stage('Install System Packages (Python & Pip)') {
+        stage('Install Python & Pip') {
             steps {
                 sh '''
-                    echo "🔧 Installing Python and pip..."
-                    sudo apt-get update -y
-                    sudo apt-get install -y python3 python3-pip python3-venv
+                    echo "🔧 Installing Python, pip, and venv..."
+                    echo "$SUDO_PASSWORD" | sudo -S apt-get update -y
+                    echo "$SUDO_PASSWORD" | sudo -S apt-get install -y python3 python3-pip python3-venv
                 '''
             }
         }
 
-        stage('Set Up Python Virtual Environment & Install Dependencies') {
+        stage('Set Up Python Environment') {
             steps {
                 sh '''
                     echo "🐍 Creating virtual environment..."
                     python3 -m venv venv
 
-                    echo "📦 Activating and installing dependencies..."
+                    echo "📦 Installing dependencies..."
                     . venv/bin/activate
                     pip install --upgrade pip
                     pip install embedchain openai
@@ -37,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('Prepare Error Log File') {
+        stage('Prepare Error Log') {
             steps {
                 sh '''
                     echo "📝 Copying sample error log..."
@@ -46,17 +47,17 @@ pipeline {
             }
         }
 
-        stage('Run AI Error Summarizer') {
+        stage('Run AI Summarizer') {
             steps {
                 sh '''
-                    echo "🤖 Running the AI summarizer script..."
+                    echo "🤖 Running AI summarizer..."
                     . venv/bin/activate
                     python error_summarizer_agent.py
                 '''
             }
         }
 
-        stage('Publish Error Summary') {
+        stage('Display AI Summary') {
             steps {
                 sh '''
                     echo "===== 🧠 AI-Generated Summary ====="
