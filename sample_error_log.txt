@@ -1,0 +1,50 @@
+[INFO] 2025-07-22 08:13:02 - Starting backend server on port 8000
+[INFO] 2025-07-22 08:13:05 - Connecting to PostgreSQL at db.prod.internal:5432
+[INFO] 2025-07-22 08:13:05 - PostgreSQL connection established successfully
+[INFO] 2025-07-22 08:13:07 - Health check passed on user-service
+[INFO] 2025-07-22 08:13:10 - User login request received: user_id=1298
+
+[ERROR] 2025-07-22 08:13:10 - Database query failed: ERROR: relation "sessions" does not exist
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2102)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1835)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:257)
+	at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:512)
+
+[WARNING] 2025-07-22 08:13:12 - Redis cache miss for key: session:1298
+
+[ERROR] 2025-07-22 08:13:15 - Timeout while calling payment-service: POST http://payment.prod.internal/api/payments - took 5123ms
+
+[INFO] 2025-07-22 08:13:20 - Retrying payment request for user_id=1298
+[INFO] 2025-07-22 08:13:20 - Retry attempt 1/3
+
+[ERROR] 2025-07-22 08:13:21 - Payment gateway returned 500: "Transaction declined by provider"
+
+[ERROR] 2025-07-22 08:13:24 - java.lang.NullPointerException
+	at com.prod.billing.PaymentProcessor.process(PaymentProcessor.java:142)
+	at com.prod.billing.BillingService.chargeUser(BillingService.java:85)
+
+[INFO] 2025-07-22 08:13:30 - User logout request received: user_id=1298
+
+[ERROR] 2025-07-22 08:13:33 - Failed to send logout event to event-bus: ConnectionRefusedError [Errno 111]
+
+[WARNING] 2025-07-22 08:13:36 - Disk usage warning: 91% used on /dev/sda1
+
+[ERROR] 2025-07-22 08:13:40 - AuthService: Invalid token detected for user_id=5563, token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVC...
+
+[INFO] 2025-07-22 08:13:44 - Session cleanup job started
+[INFO] 2025-07-22 08:13:46 - Session cleanup completed in 2.1s
+
+[ERROR] 2025-07-22 08:13:50 - SMTP server not responding: [Errno 110] Connection timed out
+[ERROR] 2025-07-22 08:13:50 - Failed to send password reset email to user@example.com
+
+[INFO] 2025-07-22 08:13:55 - Shutting down gracefully...
+
+[CRITICAL] 2025-07-22 08:13:59 - Unhandled exception in main thread
+Traceback (most recent call last):
+  File "main.py", line 202, in <module>
+    run_app()
+  File "main.py", line 182, in run_app
+    initialize_services()
+  File "services/initializer.py", line 33, in initialize_services
+    raise RuntimeError("Unable to initialize critical service: user-service")
+RuntimeError: Unable to initialize critical service: user-service
