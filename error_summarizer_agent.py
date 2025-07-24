@@ -1,27 +1,11 @@
 import os
 from embedchain import App
-from embedchain.config import AppConfig, OpenAIConfig, OpenAIEmbedderConfig
 
-# Set your OpenAI API Key from environment (Jenkins)
+# Set your OpenAI API key
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-# ✅ Define proper configuration using Embedchain's config classes
-llm_config = OpenAIConfig(
-    model="gpt-3.5-turbo",
-    temperature=0.3
-)
-
-embedder_config = OpenAIEmbedderConfig(
-    model="text-embedding-ada-002"
-)
-
-app_config = AppConfig(
-    llm=llm_config,
-    embedder=embedder_config
-)
-
-# ✅ Instantiate App with proper AppConfig
-app = App(config=app_config)
+# Simpler default initialization
+app = App()
 
 def summarize_error_logs():
     with open("error_log.txt", "r") as f:
