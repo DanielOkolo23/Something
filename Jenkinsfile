@@ -23,10 +23,10 @@ pipeline {
 
         stage('Run AI Summarizer (via venv)') {
             steps {
-                sh '''
+                sh """
                     echo "📦 Activating virtual environment and running summarizer..."
-                    bash -c 'cd "$WORKSPACE" && source /var/lib/jenkins/jenkins_embedchain/venv/bin/activate && python3 error_summarizer_agent.py'
-                '''
+                    bash -c "cd '$WORKSPACE' && source /var/lib/jenkins/jenkins_embedchain/venv/bin/activate && python3 error_summarizer_agent.py"
+                """
             }
         }
 
