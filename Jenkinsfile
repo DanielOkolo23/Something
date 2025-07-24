@@ -1,12 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11'
-        }
-    }
+    agent any
 
     environment {
-        OPENAI_API_KEY = credentials('openai-api-key')  // Store your OpenAI key in Jenkins credentials
+        OPENAI_API_KEY = credentials('openai-api-key')
     }
 
     stages {
@@ -16,21 +12,11 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    echo "📦 Installing Embedchain and OpenAI..."
-                    pip install --upgrade pip
-                    pip install embedchain openai
-                '''
-            }
-        }
-
         stage('Prepare Error Log File') {
             steps {
                 sh '''
                     echo "📝 Preparing log file..."
-                    cp sample_error_log.txt error_log.txt 
+                    cp error_log_samples/sample_error_log.txt error_log.txt
                 '''
             }
         }
@@ -39,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                     echo "🤖 Running AI summarizer..."
-                    python error_summarizer_agent.py
+                    python3 error_summarizer_agent.py
                 '''
             }
         }
