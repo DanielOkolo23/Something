@@ -1,15 +1,15 @@
 import os
 from embedchain import App
 
-# Set your OpenAI API Key (stored securely in Jenkins)
+# ✅ Set your OpenAI API Key from Jenkins ENV
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-# Embedchain config with OpenAI provider
+# ✅ Custom LLM + Embedder config
 config = {
     'llm': {
         'provider': 'openai',
         'config': {
-            'model': 'gpt-3.5-turbo',  # Or 'gpt-4' if you have access
+            'model': 'gpt-3.5-turbo',
             'temperature': 0.3
         }
     },
@@ -21,14 +21,14 @@ config = {
     }
 }
 
-app = App.from_config(config=config)
+# ✅ Instantiate with config
+app = App(config=config)
 
 def summarize_error_logs():
     with open("error_log.txt", "r") as f:
         logs = f.read()
 
-    prompt = f"""You are an expert log analyst.
-Analyze the following server error log and provide a summary with:
+    prompt = f"""You are an expert log analyst. Analyze the following server error log and provide a summary with:
 - Major issues
 - Common errors
 - Any repeated patterns
@@ -36,7 +36,6 @@ Analyze the following server error log and provide a summary with:
 Log:
 {logs}
 """
-
     result = app.query(prompt)
 
     with open("error_summary.md", "w") as f:
