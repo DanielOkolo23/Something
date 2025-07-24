@@ -1,4 +1,4 @@
-pipeline {
+[6:33 PM, 7/24/2025] Cloud Sensei: pipeline {
     agent any
 
     environment {
@@ -21,12 +21,14 @@ pipeline {
             }
         }
 
-        stage('Run AI Summarizer (via venv)') {
+        stage('Run AI Summarizer (via shell script)') {
             steps {
-                sh """
-                    echo "📦 Activating virtual environment and running summarizer..."
-                    bash -c "cd '$WORKSPACE' && source /var/lib/jenkins/jenkins_embedchain/venv/bin/activate && python3 error_summarizer_agent.py"
-                """
+                sh '''
+                    echo "✅ Making summarizer script executable..."
+                    chmod +x run_summarizer.sh
+                    echo "🤖 Running AI summarizer..."
+                    bash run_summarizer.sh
+                '''
             }
         }
 
@@ -41,3 +43,4 @@ pipeline {
         }
     }
 }
+[6:33 PM, 7/24/2025] Daniel: 
