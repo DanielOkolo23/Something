@@ -1,4 +1,4 @@
-[6:33 PM, 7/24/2025] Cloud Sensei: pipeline {
+ pipeline {
     agent any
 
     environment {
