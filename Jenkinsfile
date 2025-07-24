@@ -16,7 +16,7 @@ pipeline {
             steps {
                 sh '''
                     echo "📝 Preparing error log file..."
-                    cp error_log_samples/sample_error_log.txt error_log.txt
+                    cp sample_error_log.txt error_log.txt
                 '''
             }
         }
